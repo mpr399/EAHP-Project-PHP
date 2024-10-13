@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  eahpdb-server:
+    container_name: eahpdb-server
+    image: mvpar/eahpdb
+    ports:
+      - "3331:3306"
+    volumes:
+      - eahpdbdata:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=Mpr@399
+
+  eahpapp:
+    container_name: eahpapp
+    image: mvpar/eahpapp
+    ports:
+      - "8031:80"
+    volumes: 
+      - eahpappdata:/var/www/html
+volumes:
+  eahpdbdata: {}
+  eahpappdata: {}
