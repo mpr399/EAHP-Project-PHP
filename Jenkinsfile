@@ -1,10 +1,27 @@
 pipeline {
     agent any
+    environment { 
+        SCANNER_HOME = tool 'sonar-scanner'
+    }
     stages {
         stage('checkout'){
             steps{
                 script{
                     git branch: 'main', changelog: false, poll: false, url: 'https://github.com/mpr399/https://github.com/mpr399/EAHP-Project-PHP.git'
+                }
+            }
+        }
+        stage("Sonarqube Analysis "){ 
+            steps{ 
+                withSonarQubeEnv('sonar-server') {
+                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=EAHP -Dsonar.projectKey=EAHP''' 
+                }    
+            }
+        }
+        stage('Quality Gate'){
+            steps{
+                script{
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
                 }
             }
         }
